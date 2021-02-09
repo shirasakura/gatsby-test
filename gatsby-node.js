@@ -9,7 +9,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const result = await graphql(
     `
       {
-        allContentfulBlogPost( //　allContentfulモデル名（キャメルケース）となる
+        allContentfulBlogPost( 
           sort: { fields: [date], order: DESC }
           limit: 1000
         ) {
