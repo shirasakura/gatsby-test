@@ -1,42 +1,30 @@
-const fs = require('fs')
 const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
-
+// Log out information after a build is done
+exports.onPostBuild = ({ reporter }) => {
+  reporter.info(`Your Gatsby site has been built!`)
+}
+// Create blog pages dynamically
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
-  const result = await graphql(
-    `
-      {
-        allContentfulBlogPost( 
-          sort: { fields: [date], order: DESC }
-          limit: 1000
-        ) {
-          edges {
-            node {
-              title
-              slug
-            }
+  const blogPostTemplate = path.resolve(`src/templates/blog-post.js`)
+  const result = await graphql(`
+    query {
+      allSamplePages {
+        edges {
+          node {
+            slug
+            title
           }
         }
       }
-    `
-  )
-
-  if (result.errors) {
-    throw result.errors
-  }
-
-  // Create blog posts pages.
-  const posts = result.data.allContentfulBlogPost.edges
-
-  posts.forEach((post, index) => {
+    }
+  `)
+  result.data.allSamplePages.edges.forEach(edge => {
     createPage({
-      path: post.node.slug,
+      path: `${edge.node.slug}`,
       component: blogPost,
       context: {
-        slug: post.node.slug
+        title: edge.node.title,
       },
     })
   })
