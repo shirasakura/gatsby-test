@@ -9,11 +9,14 @@ exports.createPages = async ({ graphql, actions }) => {
   const blogPostTemplate = path.resolve(`src/templates/blog-post.js`)
   const result = await graphql(`
     query {
-      allSamplePages {
+      allContentfulPost {
         edges {
           node {
-            slug
             title
+            image
+            slug
+            body
+            publishDate
           }
         }
       }
